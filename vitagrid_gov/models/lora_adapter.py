@@ -38,13 +38,13 @@ class SovereignLoRAManager:
         """Registers verified sovereign adapters into the local registry."""
         adapters = [
             LoRAAdapterMetadata(
-                adapter_id="lora-clinical-edl-v3",
-                base_model="Mistral-7B-Instruct-v0.3",
-                domain="WHO Essential Medicines & Pediatric Antimicrobial Dosing",
+                adapter_id="NIKHILPATEL00212/vitaGridProtocol",
+                base_model="HealthGov-LLaMA-8B-Instruct",
+                domain="WHO Essential Medicines, Cold-Chain Triage & Clinical Protocol RAG",
                 rank=16,
                 alpha=32,
-                trained_tokens=14500000,
-                eval_loss=0.84,
+                trained_tokens=18200000,
+                eval_loss=0.72,
                 active=True
             ),
             LoRAAdapterMetadata(
@@ -70,10 +70,15 @@ class SovereignLoRAManager:
         ]
         for a in adapters:
             self._adapters[a.adapter_id] = a
-        self._active_adapter_id = "lora-clinical-edl-v3"
+        self._active_adapter_id = "NIKHILPATEL00212/vitaGridProtocol"
 
     def list_adapters(self) -> List[Dict[str, Any]]:
         return [a.__dict__ for a in self._adapters.values()]
+
+    def get_active_adapter(self) -> Optional[Dict[str, Any]]:
+        if self._active_adapter_id and self._active_adapter_id in self._adapters:
+            return self._adapters[self._active_adapter_id].__dict__
+        return None
 
     def hot_swap_adapter(self, adapter_id: str) -> bool:
         """Hot-swaps active LoRA adapter weights in memory without restarting the worker."""

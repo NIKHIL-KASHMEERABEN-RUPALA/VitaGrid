@@ -26,6 +26,7 @@ from vitagrid_gov.api.routes import (
     approvals_router,
     digital_twin_router,
     websocket_router,
+    hf_inference_router,
 )
 
 # Configure sovereign logging format conforming to FedRAMP High audit guidelines
@@ -114,6 +115,7 @@ app.include_router(logistics_router)
 app.include_router(approvals_router)
 app.include_router(digital_twin_router)
 app.include_router(websocket_router)
+app.include_router(hf_inference_router)
 
 
 @app.get("/health", tags=["System Probes"])

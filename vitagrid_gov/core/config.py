@@ -37,6 +37,10 @@ class Settings:
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 120
     ZERO_PII_STRICT_MODE: bool = True
 
+    # Hugging Face Sovereign Model Enclave
+    HF_TOKEN: str = os.getenv("HF_TOKEN", "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")
+    HF_MODEL_ID: str = os.getenv("HF_MODEL_ID", "NIKHILPATEL00212/vitaGridProtocol")
+
     # Redis Event Bus (with graceful in-memory async fallback)
     REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 

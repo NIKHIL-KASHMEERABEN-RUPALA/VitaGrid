@@ -289,13 +289,13 @@ export const AiDecisionCopilot: React.FC<AiDecisionCopilotProps> = ({
 
           {/* LoRA Adapter & Context Compression Strip */}
           <div className="bg-slate-900 text-slate-200 px-3.5 py-1.5 flex items-center justify-between text-[10px] font-mono shrink-0">
-            <div className="flex items-center gap-1.5 text-emerald-400">
-              <Cpu className="w-3 h-3" />
-              <span>LoRA: HealthGov-LLaMA-8B-4bit</span>
+            <div className="flex items-center gap-1.5 text-emerald-400 truncate max-w-[55%]">
+              <Cpu className="w-3 h-3 shrink-0" />
+              <span className="truncate">HF: NIKHILPATEL00212/vitaGridProtocol</span>
             </div>
-            <div className="flex items-center gap-1 text-slate-400">
-              <span>Context Compression:</span>
-              <span className="font-bold text-white">87.4% (128k &rarr; 16k tokens)</span>
+            <div className="flex items-center gap-1 text-slate-400 shrink-0">
+              <span>Token Compression:</span>
+              <span className="font-bold text-white">87.4%</span>
             </div>
           </div>
 
