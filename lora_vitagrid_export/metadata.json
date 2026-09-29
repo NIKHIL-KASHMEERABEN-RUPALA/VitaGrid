@@ -1,0 +1,35 @@
+{
+  "model_id": "NIKHILPATEL00212/vitaGridProtocol",
+  "base_model": "meta-llama/Llama-3.1-8B-Instruct",
+  "adapter_type": "PEFT-LoRA",
+  "framework": "transformers + peft + torch",
+  "quantization": "4-bit NormalFloat (NF4) with Double Quantization",
+  "training_config": {
+    "learning_rate": 0.0002,
+    "lr_scheduler": "cosine",
+    "warmup_ratio": 0.03,
+    "num_epochs": 3,
+    "batch_size": 4,
+    "gradient_accumulation_steps": 4,
+    "max_seq_length": 4096
+  },
+  "lora_config": {
+    "r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  },
+  "evaluation_metrics": {
+    "accuracy": 0.988,
+    "f1_score": 0.986,
+    "roc_auc": 0.996,
+    "hallucination_refusal_rate": 0.992,
+    "rag_faithfulness_rouge_l": 0.947,
+    "latency_p95_ms": 340
+  },
+  "training_date": "2025-09-29T12:32:09Z",
+  "version": "1.0.0",
+  "license": "apache-2.0",
+  "tags": ["vitagrid", "sovereign-health", "clinical-protocols", "WHO-EDL", "LoRA", "FIPS-140-3", "zero-PII"],
+  "domain": "Healthcare AI / Epidemic Intelligence / Supply Chain Optimization"
+}
