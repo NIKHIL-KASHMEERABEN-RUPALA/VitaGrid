@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vitagrid-gov-ai"
+version = "4.2.1-SEC"
+description = "Sovereign National Health Intelligence and Autonomous Logistics Command Platform"
+authors = [{ name = "VitaGrid GOV Sovereign Engineering" }]
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.5.0",
+    "scipy>=1.12.0",
+    "numpy>=1.26.0",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.29.0",
+]
+
+[project.optional-dependencies]
+ml = [
+    "torch>=2.2.0",
+    "transformers>=4.40.0",
+    "peft>=0.10.0",
+    "bitsandbytes>=0.43.0",
+    "trl>=0.8.6",
+    "vllm>=0.4.2",
+    "mlflow>=2.12.0",
+]
+rag = [
+    "llamaindex>=0.10.0",
+    "sentence-transformers>=2.7.0",
+]
+test = [
+    "pytest>=8.1.0",
+    "pytest-asyncio>=0.23.0",
+]

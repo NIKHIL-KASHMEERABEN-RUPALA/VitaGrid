@@ -1,0 +1,6 @@
+{
+  "name": "VitaGrid GOV - National Health Command & Logistics Center",
+  "description": "Sovereign national health intelligence and autonomous logistics command platform for Republic Health Grid.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
