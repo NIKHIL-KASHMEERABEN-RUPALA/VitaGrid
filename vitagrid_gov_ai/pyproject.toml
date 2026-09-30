@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vitagrid-gov-ai"
-version = "4.2.1-SEC"
+version = "4.2.1"
 description = "Sovereign National Health Intelligence and Autonomous Logistics Command Platform"
 authors = [{ name = "VitaGrid GOV Sovereign Engineering" }]
 requires-python = ">=3.10"

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vitagrid-gov"
-version = "4.2.1-SEC"
+version = "4.2.1"
 description = "VitaGrid GOV - Sovereign Multi-Agent Health Logistics API Gateway"
 authors = [{ name = "VitaGrid GOV Sovereign Engineering" }]
 requires-python = ">=3.10"

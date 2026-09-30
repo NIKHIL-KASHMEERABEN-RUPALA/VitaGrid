@@ -51,7 +51,7 @@ class SystemThresholds:
 @dataclass
 class AppConfig:
     app_name: str = "VitaGrid GOV Intelligence Layer"
-    version: str = "4.2.1-SEC"
+    version: str = "4.2.1"
     defcon_level: int = 4
     timezone: str = "Africa/Nairobi"  # UTC+3
     vitagrid_gov_url: str = os.getenv("VITAGRID_GOV_URL", "http://localhost:8000")
