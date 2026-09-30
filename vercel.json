@@ -3,7 +3,8 @@
   "services": {
     "app": {
       "root": ".",
-      "framework": "vite"
+      "framework": "vite",
+      "installCommand": "npm install --legacy-peer-deps"
     },
     "vitagrid_gov": {
       "root": "vitagrid_gov",
