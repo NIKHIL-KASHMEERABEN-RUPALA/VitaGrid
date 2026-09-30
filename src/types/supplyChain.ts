@@ -14,7 +14,7 @@ export interface EssentialMedicine {
   name: string;
   packaging: string;
   formulation: string;
-  category: 'antibiotics' | 'maternal' | 'vaccines' | 'malaria' | 'other';
+  category: 'antibiotics' | 'maternal' | 'vaccines' | 'malaria' | 'other' | 'antimalarials' | 'chronic';
   currentStock: number;
   stockUnit: string;
   dailyVelocity: number;
@@ -27,6 +27,8 @@ export interface EssentialMedicine {
   historicalData: number[]; // T-14 to T-0
   forecastData: number[];   // T+1 to T+14
   safetyBuffer: number;
+  batchNumber?: string;
+  minBufferDays?: number;
 }
 
 export interface CorridorVulnerability {

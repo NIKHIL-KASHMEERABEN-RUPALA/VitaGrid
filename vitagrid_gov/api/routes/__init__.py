@@ -9,6 +9,7 @@ from vitagrid_gov.api.routes.approvals import router as approvals_router
 from vitagrid_gov.api.routes.digital_twin import router as digital_twin_router
 from vitagrid_gov.api.routes.websocket import router as websocket_router
 from vitagrid_gov.api.routes.hf_inference import router as hf_inference_router
+from vitagrid_gov.api.routes.ai_bridge import router as ai_bridge_router
 
 __all__ = [
     "command_center_router",
@@ -18,4 +19,5 @@ __all__ = [
     "digital_twin_router",
     "websocket_router",
     "hf_inference_router",
+    "ai_bridge_router",
 ]

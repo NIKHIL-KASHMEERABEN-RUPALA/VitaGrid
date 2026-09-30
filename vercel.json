@@ -1,0 +1,93 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "app": {
+      "root": ".",
+      "framework": "vite"
+    },
+    "vitagrid_gov": {
+      "root": "vitagrid_gov",
+      "framework": "fastapi",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "vitagrid_gov_ai",
+          "format": "url",
+          "env": "VITAGRID_AI_URL"
+        }
+      ]
+    },
+    "vitagrid_gov_ai": {
+      "root": "vitagrid_gov_ai",
+      "framework": "fastapi"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "vitagrid_gov"
+      }
+    },
+    {
+      "source": "/health",
+      "destination": {
+        "service": "vitagrid_gov"
+      }
+    },
+    {
+      "source": "/system/(.*)",
+      "destination": {
+        "service": "vitagrid_gov"
+      }
+    },
+    {
+      "source": "/command-center/(.*)",
+      "destination": {
+        "service": "vitagrid_gov"
+      }
+    },
+    {
+      "source": "/predictions/(.*)",
+      "destination": {
+        "service": "vitagrid_gov"
+      }
+    },
+    {
+      "source": "/logistics/(.*)",
+      "destination": {
+        "service": "vitagrid_gov"
+      }
+    },
+    {
+      "source": "/approvals/(.*)",
+      "destination": {
+        "service": "vitagrid_gov"
+      }
+    },
+    {
+      "source": "/digital-twin/(.*)",
+      "destination": {
+        "service": "vitagrid_gov"
+      }
+    },
+    {
+      "source": "/hf-inference/(.*)",
+      "destination": {
+        "service": "vitagrid_gov"
+      }
+    },
+    {
+      "source": "/ws/(.*)",
+      "destination": {
+        "service": "vitagrid_gov"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "app"
+      }
+    }
+  ]
+}

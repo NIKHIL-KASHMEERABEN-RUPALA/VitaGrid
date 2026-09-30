@@ -54,6 +54,7 @@ class AppConfig:
     version: str = "4.2.1-SEC"
     defcon_level: int = 4
     timezone: str = "Africa/Nairobi"  # UTC+3
+    vitagrid_gov_url: str = os.getenv("VITAGRID_GOV_URL", "http://localhost:8000")
     security: SovereignSecurityConfig = field(default_factory=SovereignSecurityConfig)
     models: ModelConfig = field(default_factory=ModelConfig)
     thresholds: SystemThresholds = field(default_factory=SystemThresholds)

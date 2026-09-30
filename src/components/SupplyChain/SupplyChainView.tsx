@@ -26,6 +26,7 @@ import { HierarchyTree } from './HierarchyTree';
 import { DepletionTable } from './DepletionTable';
 import { VulnerabilityHeatmap } from './VulnerabilityHeatmap';
 import { SarimaForecast } from './SarimaForecast';
+import { AddMedicineModal } from './AddMedicineModal';
 import { ModelWeightsModal } from './ModelWeightsModal';
 import { ThermalModelModal } from './ThermalModelModal';
 import { TransferSimulationModal } from './TransferSimulationModal';
@@ -51,6 +52,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [tableSearch, setTableSearch] = useState<string>('');
   const [selectedRegion, setSelectedRegion] = useState<string>('all-regions');
+  const [medicines, setMedicines] = useState<EssentialMedicine[]>(ESSENTIAL_MEDICINES);
   const [selectedMedicine, setSelectedMedicine] = useState<EssentialMedicine>(
     ESSENTIAL_MEDICINES[0]
   );
@@ -66,6 +68,32 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
   const [isThermalModelOpen, setIsThermalModelOpen] = useState<boolean>(false);
   const [selectedTransferForSim, setSelectedTransferForSim] = useState<any>(null);
   const [isMedicineDrawerOpen, setIsMedicineDrawerOpen] = useState<boolean>(false);
+  const [isAddMedicineOpen, setIsAddMedicineOpen] = useState<boolean>(false);
+
+  const handleAddMedicine = (newMed: EssentialMedicine) => {
+    setMedicines((prev) => [newMed, ...prev]);
+    setSelectedMedicine(newMed);
+    showToast(`Added ${newMed.name} to active supply chain inventory!`);
+  };
+
+  const handleUpdateMedicine = (updatedMed: EssentialMedicine) => {
+    setMedicines((prev) =>
+      prev.map((m) => (m.id === updatedMed.id ? updatedMed : m))
+    );
+    setSelectedMedicine(updatedMed);
+    showToast(`Updated ${updatedMed.name} inventory parameters.`);
+  };
+
+  const handleDeleteMedicine = (medicineId: string) => {
+    setMedicines((prev) => {
+      const filtered = prev.filter((m) => m.id !== medicineId);
+      if (selectedMedicine.id === medicineId && filtered.length > 0) {
+        setSelectedMedicine(filtered[0]);
+      }
+      return filtered;
+    });
+    showToast(`Medicine item removed from active tracking.`);
+  };
 
   useEffect(() => {
     loadLiveLogistics(selectedMedicine.name);
@@ -118,7 +146,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
     { id: 'malaria', label: 'Anti-Malarials' },
   ];
 
-  const filteredMedicines = ESSENTIAL_MEDICINES.filter((med) => {
+  const filteredMedicines = medicines.filter((med) => {
     const matchesCategory =
       selectedCategory === 'all' || med.category === selectedCategory;
     const matchesSearch =
@@ -445,19 +473,28 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
             />
           </div>
 
-          <div className="relative w-full sm:w-64">
-            <select
-              value={selectedRegion}
-              onChange={(e) => setSelectedRegion(e.target.value)}
-              className="w-full bg-white border border-slate-200/90 rounded-md px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-2xs appearance-none pr-8 font-medium cursor-pointer"
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="relative w-full sm:w-64">
+              <select
+                value={selectedRegion}
+                onChange={(e) => setSelectedRegion(e.target.value)}
+                className="w-full bg-white border border-slate-200/90 rounded-md px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-2xs appearance-none pr-8 font-medium cursor-pointer"
+              >
+                <option value="all-regions">All Regions (National)</option>
+                <option value="coastal">Coastal Region (Mombasa / Kilifi / Kwale)</option>
+                <option value="northern">Northern Frontier (Garissa / Lodwar / Wajir)</option>
+                <option value="central">Central &amp; Nairobi Metropolitan</option>
+                <option value="lake-basin">Lake Basin &amp; Kisumu Cluster</option>
+              </select>
+              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            </div>
+
+            <button
+              onClick={() => setIsAddMedicineOpen(true)}
+              className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold shadow-2xs transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0"
             >
-              <option value="all-regions">All Regions (National)</option>
-              <option value="coastal">Coastal Region (Mombasa / Kilifi / Kwale)</option>
-              <option value="northern">Northern Frontier (Garissa / Lodwar / Wajir)</option>
-              <option value="central">Central &amp; Nairobi Metropolitan</option>
-              <option value="lake-basin">Lake Basin &amp; Kisumu Cluster</option>
-            </select>
-            <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+              <span>+ Add Medicine</span>
+            </button>
           </div>
         </div>
       </div>
@@ -530,6 +567,14 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
         medicine={selectedMedicine}
         onOpenModelWeights={() => setIsModelWeightsOpen(true)}
         onRunRebalanceDirective={(medName) => handleRunFullRebalance()}
+        onUpdateMedicine={handleUpdateMedicine}
+        onDeleteMedicine={handleDeleteMedicine}
+      />
+
+      <AddMedicineModal
+        isOpen={isAddMedicineOpen}
+        onClose={() => setIsAddMedicineOpen(false)}
+        onAddMedicine={handleAddMedicine}
       />
 
       {/* Toast Notification */}

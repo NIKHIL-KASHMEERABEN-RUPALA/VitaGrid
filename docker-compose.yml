@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # 1. VitaGrid Command Center Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: vitagrid-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - vitagrid-net
+
+  # 2. VitaGrid GOV FastAPI Backend & Sovereign Enclave
+  backend:
+    build:
+      context: .
+      dockerfile: vitagrid_gov/Dockerfile
+    container_name: vitagrid-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - VITAGRID_ENV=production
+      - DEBUG=false
+      - REDIS_URL=redis://redis:6379/0
+      - HF_MODEL_REPO=NIKHILPATEL00212/vitaGridProtocol
+      - HF_TOKEN=${HF_TOKEN:-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}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - vitagrid-net
+
+  # 3. High-throughput Redis Event Bus for Swarm Agents & Telemetry
+  redis:
+    image: redis:7-alpine
+    container_name: vitagrid-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - vitagrid-net
+
+networks:
+  vitagrid-net:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local

@@ -41,6 +41,9 @@ class Settings:
     HF_TOKEN: str = os.getenv("HF_TOKEN", "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")
     HF_MODEL_ID: str = os.getenv("HF_MODEL_ID", "NIKHILPATEL00212/vitaGridProtocol")
 
+    # Internal Vercel Microservice Binding for AI Engine
+    VITAGRID_AI_URL: str = os.getenv("VITAGRID_AI_URL", os.getenv("AI_SERVICE_URL", "http://localhost:8001"))
+
     # Redis Event Bus (with graceful in-memory async fallback)
     REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 

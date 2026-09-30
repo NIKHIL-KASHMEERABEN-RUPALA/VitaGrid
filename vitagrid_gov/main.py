@@ -27,6 +27,7 @@ from vitagrid_gov.api.routes import (
     digital_twin_router,
     websocket_router,
     hf_inference_router,
+    ai_bridge_router,
 )
 
 # Configure sovereign logging format conforming to FedRAMP High audit guidelines
@@ -108,17 +109,24 @@ async def add_sovereign_headers(request: Request, call_next):
     return response
 
 
-# Register Routers
-app.include_router(command_center_router)
-app.include_router(predictions_router)
-app.include_router(logistics_router)
-app.include_router(approvals_router)
-app.include_router(digital_twin_router)
-app.include_router(websocket_router)
-app.include_router(hf_inference_router)
+# Register Routers (both at root and with /api prefix for Vercel multi-service routing)
+all_routers = [
+    command_center_router,
+    predictions_router,
+    logistics_router,
+    approvals_router,
+    digital_twin_router,
+    websocket_router,
+    hf_inference_router,
+    ai_bridge_router,
+]
+for r in all_routers:
+    app.include_router(r)
+    app.include_router(r, prefix="/api")
 
 
 @app.get("/health", tags=["System Probes"])
+@app.get("/api/health", tags=["System Probes"])
 async def health_check():
     """Liveness probe verifying that the sovereign enclave is operational."""
     chain_valid, broken_block = audit_ledger.verify_chain_integrity()
@@ -133,6 +141,7 @@ async def health_check():
 
 
 @app.get("/system/status", tags=["System Probes"])
+@app.get("/api/system/status", tags=["System Probes"])
 async def system_status():
     """Full operational inspection endpoint reporting all 10 specialist agents' health and Defcon level."""
     return commander_orchestrator.get_system_status()

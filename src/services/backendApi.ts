@@ -3,13 +3,37 @@
  * Provides typed REST client calls and live WebSocket hooks connecting to the FastAPI backend.
  */
 
-const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-  ? 'http://localhost:8000'
-  : (import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000');
+const getApiBaseUrl = (): string => {
+  if (import.meta.env.VITE_BACKEND_URL) {
+    return import.meta.env.VITE_BACKEND_URL;
+  }
+  if (typeof window !== 'undefined') {
+    // If running in local standalone Vite on port 5173, point to standalone FastAPI port 8000
+    if (window.location.hostname === 'localhost' && window.location.port === '5173') {
+      return 'http://localhost:8000';
+    }
+    // On Vercel multi-service project or unified reverse proxy, relative paths route to the backend service
+    return '';
+  }
+  return 'http://localhost:8000';
+};
 
-const WS_BASE_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-  ? 'ws://localhost:8000'
-  : (import.meta.env.VITE_WS_URL || 'ws://localhost:8000');
+const getWsBaseUrl = (): string => {
+  if (import.meta.env.VITE_WS_URL) {
+    return import.meta.env.VITE_WS_URL;
+  }
+  if (typeof window !== 'undefined') {
+    if (window.location.hostname === 'localhost' && window.location.port === '5173') {
+      return 'ws://localhost:8000';
+    }
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    return `${protocol}//${window.location.host}`;
+  }
+  return 'ws://localhost:8000';
+};
+
+const API_BASE_URL = getApiBaseUrl();
+const WS_BASE_URL = getWsBaseUrl();
 
 // Helper for resilient fetch with fallback handling
 async function safeFetch<T>(endpoint: string, options?: RequestInit, fallbackData?: T): Promise<T> {
