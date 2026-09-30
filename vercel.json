@@ -4,7 +4,7 @@
     "app": {
       "root": ".",
       "framework": "vite",
-      "installCommand": "npm install --legacy-peer-deps"
+      "installCommand": "npm install --legacy-peer-deps --loglevel=error"
     },
     "vitagrid_gov": {
       "root": "vitagrid_gov",
