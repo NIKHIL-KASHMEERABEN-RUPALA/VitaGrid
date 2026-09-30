@@ -39,6 +39,8 @@ import {
   createActionDocket,
   subscribeToLiveTelemetry,
 } from '../../services/backendApi';
+import { useNotifications } from '../../context/NotificationContext';
+import { useRbac } from '../../context/RbacContext';
 
 interface SupplyChainViewProps {
   onSyncHubNodes?: () => void;
@@ -60,8 +62,10 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
   const [isOptimizing, setIsOptimizing] = useState<boolean>(false);
   const [rebalanceData, setRebalanceData] = useState<any>(null);
   const [coldChainData, setColdChainData] = useState<any>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [docketCreated, setDocketCreated] = useState<boolean>(false);
+
+  const { showToast, addNotification } = useNotifications();
+  const { verifyPermissionOrPrompt } = useRbac();
 
   // Modals and Drawers
   const [isModelWeightsOpen, setIsModelWeightsOpen] = useState<boolean>(false);
@@ -73,7 +77,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
   const handleAddMedicine = (newMed: EssentialMedicine) => {
     setMedicines((prev) => [newMed, ...prev]);
     setSelectedMedicine(newMed);
-    showToast(`Added ${newMed.name} to active supply chain inventory!`);
+    showToast(`Added ${newMed.name} to active supply chain inventory!`, 'success');
   };
 
   const handleUpdateMedicine = (updatedMed: EssentialMedicine) => {
@@ -81,7 +85,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
       prev.map((m) => (m.id === updatedMed.id ? updatedMed : m))
     );
     setSelectedMedicine(updatedMed);
-    showToast(`Updated ${updatedMed.name} inventory parameters.`);
+    showToast(`Updated ${updatedMed.name} inventory parameters.`, 'success');
   };
 
   const handleDeleteMedicine = (medicineId: string) => {
@@ -92,7 +96,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
       }
       return filtered;
     });
-    showToast(`Medicine item removed from active tracking.`);
+    showToast(`Medicine item removed from active tracking.`, 'info');
   };
 
   useEffect(() => {
@@ -133,11 +137,6 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
     }
   };
 
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3500);
-  };
-
   const categories = [
     { id: 'all', label: 'All Categories (340)' },
     { id: 'antibiotics', label: 'Class I Antibiotics' },
@@ -162,22 +161,26 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
     loadLiveLogistics(selectedMedicine.name);
     setTimeout(() => {
       setIsSyncing(false);
-      showToast('Synchronized 340 essential medicines across all 5 echelons & 2,840 PHCs.');
+      showToast('Synchronized 340 essential medicines across all 5 echelons & 2,840 PHCs.', 'success');
       if (onSyncHubNodes) onSyncHubNodes();
     }, 600);
   };
 
   const handleRunFullRebalance = async () => {
+    if (!verifyPermissionOrPrompt('canExecuteTransfer', 'Run Multi-Agent LP Simplex Rebalance')) {
+      return;
+    }
+
     setIsOptimizing(true);
     try {
       await loadLiveLogistics(selectedMedicine.name);
       setTimeout(() => {
         setIsOptimizing(false);
-        showToast('Multi-Agent Swarm solved Primal-Dual LP: 2 transfer routes recalculated with 0.00% gap.');
+        showToast('Multi-Agent Swarm solved Primal-Dual LP: 2 transfer routes recalculated with 0.00% gap.', 'success');
       }, 700);
     } catch (err) {
       setIsOptimizing(false);
-      showToast('Rebalance completed with local solver.');
+      showToast('Rebalance completed with local solver.', 'info');
     }
   };
 
@@ -194,7 +197,14 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
           t.estimated_transit_hours
         );
         setDocketCreated(true);
-        showToast(`Action Docket #${rebalanceData.proposal_id || '842'} created and routed to Ministerial Approvals.`);
+        showToast(`Action Docket #${rebalanceData.proposal_id || '842'} created and routed to Ministerial Approvals.`, 'success');
+        addNotification({
+          type: 'approval',
+          title: `Action Docket #${rebalanceData.proposal_id || '842'} Created`,
+          message: `Rebalance of ${t.quantity_units} units ${t.commodity_name} queued for Ministerial ECDSA sign-off.`,
+          actionLabel: 'Sign Docket',
+          actionTargetModule: 'human-approvals',
+        });
       } catch (err) {
         console.warn('Docket creation fallback.');
       }
@@ -222,6 +232,12 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
     document.body.removeChild(a);
   };
 
+  const handleOpenAddMedicine = () => {
+    if (verifyPermissionOrPrompt('canModifyInventory', 'Add Essential Medicine to National Ledger')) {
+      setIsAddMedicineOpen(true);
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* Main Content Header */}
@@ -229,41 +245,41 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
         <div>
           {/* Top Badges */}
           <div className="flex items-center gap-2 mb-1 text-[11px] font-bold tracking-wider uppercase font-mono">
-            <div className="flex items-center gap-1.5 text-blue-700">
+            <div className="flex items-center gap-1.5 text-blue-700 dark:text-cyan-400">
               <Building2 className="w-3.5 h-3.5" />
               <span>NATIONAL SOVEREIGN PHARMACEUTICAL LEDGER</span>
             </div>
-            <span className="text-slate-300">•</span>
-            <span className="text-slate-600">TIER-1 COLD &amp; DRY CHAIN</span>
+            <span className="text-slate-300 dark:text-slate-700">•</span>
+            <span className="text-slate-600 dark:text-slate-400">TIER-1 COLD &amp; DRY CHAIN</span>
           </div>
 
           {/* Large Title */}
-          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Supply Chain Intelligence &amp; Multi-Echelon Rebalancing
           </h1>
 
           {/* Subtitle */}
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Primal-Dual Linear Programming rebalancing, 5-tier depot monitoring, and real-time IoT vaccine thermal integrity.
           </p>
         </div>
 
         {/* Right Action & Status Area */}
-        <div className="flex flex-wrap items-center gap-2.5 bg-white p-2 rounded-lg border border-slate-200/90 shadow-2xs self-start lg:self-auto">
-          <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium px-1">
+        <div className="flex flex-wrap items-center gap-2.5 bg-white dark:bg-[#0F172A] p-2 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs self-start lg:self-auto">
+          <div className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300 font-medium px-1">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-subtle"></span>
             <span>SLA Target: &gt;96.5% Avail</span>
           </div>
 
-          <div className="h-4 w-px bg-slate-200 hidden sm:block"></div>
+          <div className="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
 
           {/* Custom Model Weights Button */}
           <button
             onClick={() => setIsModelWeightsOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-xs font-semibold transition-colors cursor-pointer border border-slate-200"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
             title="Inspect and mount custom trained model weights (.pt, .onnx, .json, LoRA)"
           >
-            <Cpu className="w-3.5 h-3.5 text-blue-600" />
+            <Cpu className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
             <span>Model Weights</span>
           </button>
 
@@ -271,7 +287,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
           <button
             onClick={handleSync}
             disabled={isSyncing}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-md text-xs font-semibold transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-cyan-400 hover:bg-blue-100 dark:hover:bg-blue-900/60 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
           >
             <RotateCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
             <span>Sync All 5 Echelons</span>
@@ -281,7 +297,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
           <button
             onClick={handleRunFullRebalance}
             disabled={isOptimizing}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
           >
             <Zap className={`w-3.5 h-3.5 ${isOptimizing ? 'animate-spin text-amber-300' : 'text-amber-300'}`} />
             <span>{isOptimizing ? 'Optimizing Simplex...' : 'Run Full Multi-Agent Rebalance'}</span>
@@ -292,22 +308,22 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
       {/* Live Primal-Dual Optimizer & Cold-Chain Dual Banner */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* Logistics Optimizer Output (8 cols) */}
-        <div className="lg:col-span-8 bg-white rounded-xl border border-blue-200/90 p-4 shadow-2xs space-y-3">
+        <div className="lg:col-span-8 bg-white dark:bg-[#0F172A] rounded-xl border border-blue-200/90 dark:border-slate-800 p-4 shadow-2xs space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-2xs">
+              <div className="w-7 h-7 rounded-lg bg-blue-600 dark:bg-blue-700 flex items-center justify-center text-white shadow-2xs">
                 <Truck className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-slate-900 uppercase font-mono tracking-wider">
+                <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase font-mono tracking-wider">
                   Logistics Agent • Primal-Dual Linear Programming Transfer Directive
                 </h3>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
                   Minimizing Ton-Km transport cost to relieve subcounty stockouts before 48h depletion cutoff.
                 </p>
               </div>
             </div>
-            <span className="text-[10px] font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-mono font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60 px-2 py-0.5 rounded">
               SLA: 6 HOURS TO GATE
             </span>
           </div>
@@ -317,42 +333,42 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
               {rebalanceData.transfers.map((t: any) => (
                 <div
                   key={t.route_id}
-                  className="p-3 bg-slate-50 rounded-lg border border-slate-200/80 text-xs space-y-2"
+                  className="p-3 bg-slate-50 dark:bg-slate-900/70 rounded-xl border border-slate-200/80 dark:border-slate-800 text-xs space-y-2"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-bold font-mono text-blue-700">{t.route_id}</span>
-                    <span className="text-[9px] font-bold font-mono px-1.5 py-0.5 bg-red-100 text-red-700 rounded">
+                    <span className="font-bold font-mono text-blue-700 dark:text-cyan-400">{t.route_id}</span>
+                    <span className="text-[9px] font-bold font-mono px-1.5 py-0.5 bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-400 rounded">
                       {t.urgency_priority}
                     </span>
                   </div>
-                  <div className="font-semibold text-slate-800 truncate">
+                  <div className="font-semibold text-slate-800 dark:text-slate-200 truncate">
                     {t.source_facility_name} &rarr; {t.target_facility_name}
                   </div>
-                  <div className="text-[11px] text-slate-600 flex items-center justify-between">
-                    <span>Units: <strong className="text-slate-900">{t.quantity_units?.toLocaleString()}</strong></span>
-                    <span>Distance: <strong className="text-slate-900">{t.transit_distance_km} km</strong></span>
-                    <span>ETA: <strong className="text-emerald-700">{t.estimated_transit_hours}h</strong></span>
+                  <div className="text-[11px] text-slate-600 dark:text-slate-400 flex items-center justify-between font-mono">
+                    <span>Units: <strong className="text-slate-900 dark:text-white">{t.quantity_units?.toLocaleString()}</strong></span>
+                    <span>Distance: <strong className="text-slate-900 dark:text-white">{t.transit_distance_km} km</strong></span>
+                    <span>ETA: <strong className="text-emerald-700 dark:text-emerald-400">{t.estimated_transit_hours}h</strong></span>
                   </div>
 
-                  {/* Directive Action Buttons: Simulate, Authorize Docket, Modify */}
-                  <div className="pt-2 border-t border-slate-200/70 flex items-center justify-between gap-1.5">
+                  {/* Directive Action Buttons */}
+                  <div className="pt-2 border-t border-slate-200/70 dark:border-slate-800 flex items-center justify-between gap-1.5">
                     <button
                       onClick={() => setSelectedTransferForSim(t)}
-                      className="px-2 py-1 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 rounded text-[10px] font-semibold transition-colors cursor-pointer"
+                      className="px-2 py-1 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded text-[10px] font-semibold transition-colors cursor-pointer"
                     >
                       Simulate
                     </button>
                     <button
                       onClick={() => setSelectedTransferForSim(t)}
-                      className="px-2 py-1 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 rounded text-[10px] font-semibold transition-colors cursor-pointer"
+                      className="px-2 py-1 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded text-[10px] font-semibold transition-colors cursor-pointer"
                     >
                       Modify
                     </button>
                     <button
                       onClick={() => handleCreateAndReviewDocket(t.route_id)}
-                      className="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded text-[10px] font-bold transition-colors cursor-pointer flex items-center gap-1"
+                      className="px-2 py-1 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-700 dark:text-cyan-400 border border-blue-200 dark:border-blue-900 rounded text-[10px] font-bold transition-colors cursor-pointer flex items-center gap-1"
                     >
-                      <ShieldCheck className="w-2.5 h-2.5 text-blue-600" />
+                      <ShieldCheck className="w-2.5 h-2.5 text-blue-600 dark:text-cyan-400" />
                       <span>Authorize Docket</span>
                     </button>
                   </div>
@@ -361,15 +377,15 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
             </div>
           )}
 
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[11px] text-slate-500 font-mono">
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
               {docketCreated
                 ? 'Status: Action Docket #842 drafted & queued for National Director sign-off'
                 : 'Status: Action Docket #842 drafted & queued for National Director sign-off'}
             </span>
             <button
               onClick={() => handleCreateAndReviewDocket()}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
             >
               <span>Review &amp; Authorize Docket</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -378,46 +394,46 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
         </div>
 
         {/* Cold-Chain IoT Telemetry (4 cols) */}
-        <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
+        <div className="lg:col-span-4 bg-white dark:bg-[#0F172A] rounded-xl border border-slate-200/90 dark:border-slate-800 p-4 shadow-2xs space-y-3 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 font-mono">
-                <ThermometerSnowflake className="w-4 h-4 text-blue-600" />
+              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-white font-mono">
+                <ThermometerSnowflake className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
                 <span>Cold-Chain IoT Sentinel</span>
               </div>
-              <span className="text-[10px] font-bold font-mono bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded">
+              <span className="text-[10px] font-bold font-mono bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/60 px-1.5 py-0.5 rounded">
                 2.0°C - 8.0°C CORRIDOR
               </span>
             </div>
 
-            <div className="flex items-baseline justify-between py-2 border-b border-slate-100">
+            <div className="flex items-baseline justify-between py-2 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <div className="text-2xl font-black text-slate-900 font-mono">
+                <div className="text-2xl font-black text-slate-900 dark:text-white font-mono">
                   {coldChainData?.current_temp_celsius || 4.6}°C
                 </div>
-                <div className="text-[10px] text-slate-500 font-mono">Mean Core Temp (PHC-C01-001)</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Mean Core Temp (PHC-C01-001)</div>
               </div>
               <div className="text-right">
-                <div className="text-xs font-bold text-emerald-600 flex items-center gap-1">
+                <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>{coldChainData?.integrity_risk_band || 'SAFE'}</span>
                 </div>
-                <div className="text-[10px] text-slate-500 font-mono">
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
                   Excursion Risk: {(coldChainData?.excursion_probability_12h * 100 || 12).toFixed(0)}%
                 </div>
               </div>
             </div>
 
-            <div className="text-xs text-slate-600 mt-2 space-y-1">
+            <div className="text-xs text-slate-600 dark:text-slate-400 mt-2 space-y-1 font-mono">
               <div className="flex justify-between text-[11px]">
-                <span>Thermal Buffer Runway:</span>
-                <span className="font-bold font-mono text-slate-900">
+                <span className="font-sans">Thermal Buffer Runway:</span>
+                <span className="font-bold text-slate-900 dark:text-white">
                   {coldChainData?.hours_to_critical_threshold || 18.5} Hours
                 </span>
               </div>
               <div className="flex justify-between text-[11px]">
-                <span>Backup Solar Battery:</span>
-                <span className="font-bold font-mono text-emerald-700">
+                <span className="font-sans">Backup Solar Battery:</span>
+                <span className="font-bold text-emerald-700 dark:text-emerald-400">
                   {coldChainData?.solar_battery_pct || 92}% Charged
                 </span>
               </div>
@@ -425,16 +441,16 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
           </div>
 
           {/* Interactive Cold-Chain Model Buttons */}
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
             <button
               onClick={() => setIsThermalModelOpen(true)}
-              className="flex-1 py-1 px-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-[10px] font-semibold transition-colors cursor-pointer text-center border border-slate-200"
+              className="flex-1 py-1 px-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 rounded-lg text-[10px] font-semibold transition-colors cursor-pointer text-center border border-slate-200 dark:border-slate-700"
             >
               View Thermal Model
             </button>
             <button
               onClick={() => setIsThermalModelOpen(true)}
-              className="flex-1 py-1 px-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded text-[10px] font-semibold transition-colors cursor-pointer text-center border border-blue-200"
+              className="flex-1 py-1 px-2 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-700 dark:text-cyan-400 rounded-lg text-[10px] font-semibold transition-colors cursor-pointer text-center border border-blue-200 dark:border-blue-900"
             >
               Run Excursion Simulation
             </button>
@@ -452,7 +468,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
               className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
                 selectedCategory === cat.id
                   ? 'bg-blue-600 text-white font-semibold shadow-2xs'
-                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/90'
+                  : 'bg-white dark:bg-[#0F172A] text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/90 dark:border-slate-800'
               }`}
             >
               {cat.label}
@@ -469,7 +485,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
               value={tableSearch}
               onChange={(e) => setTableSearch(e.target.value)}
               placeholder="Filter medicine name, ATC code, batch, or..."
-              className="w-full bg-white border border-slate-200/90 rounded-md pl-9 pr-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-2xs"
+              className="w-full bg-white dark:bg-[#0F172A] border border-slate-200/90 dark:border-slate-800 rounded-lg pl-9 pr-4 py-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-2xs"
             />
           </div>
 
@@ -478,7 +494,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
               <select
                 value={selectedRegion}
                 onChange={(e) => setSelectedRegion(e.target.value)}
-                className="w-full bg-white border border-slate-200/90 rounded-md px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-2xs appearance-none pr-8 font-medium cursor-pointer"
+                className="w-full bg-white dark:bg-[#0F172A] border border-slate-200/90 dark:border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-2xs appearance-none pr-8 font-medium cursor-pointer"
               >
                 <option value="all-regions">All Regions (National)</option>
                 <option value="coastal">Coastal Region (Mombasa / Kilifi / Kwale)</option>
@@ -490,8 +506,8 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
             </div>
 
             <button
-              onClick={() => setIsAddMedicineOpen(true)}
-              className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-semibold shadow-2xs transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0"
+              onClick={handleOpenAddMedicine}
+              className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-2xs transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0"
             >
               <span>+ Add Medicine</span>
             </button>
@@ -505,7 +521,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
         <div className="lg:col-span-3 flex flex-col">
           <HierarchyTree
             onScanVulnerability={(nodeName) => {
-              showToast(`Scanned downstream fill rate for ${nodeName}: 91.4% capacity.`);
+              showToast(`Scanned downstream fill rate for ${nodeName}: 91.4% capacity.`, 'info');
             }}
           />
         </div>
@@ -531,7 +547,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
         <div className="lg:col-span-4 flex flex-col gap-4">
           <VulnerabilityHeatmap
             onSelectCorridor={(corridor) => {
-              showToast(`Corridor ${corridor} selected: 7-day stockout risk evaluated.`);
+              showToast(`Corridor ${corridor} selected: 7-day stockout risk evaluated.`, 'info');
             }}
           />
           <SarimaForecast selectedMedicine={selectedMedicine} />
@@ -543,7 +559,7 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
         isOpen={isModelWeightsOpen}
         onClose={() => setIsModelWeightsOpen(false)}
         onApplyWeights={(modelFile, agent) => {
-          showToast(`Custom model weights ${modelFile} loaded into ${agent}.`);
+          showToast(`Custom model weights ${modelFile} loaded into ${agent}.`, 'success');
         }}
       />
 
@@ -576,14 +592,6 @@ export const SupplyChainView: React.FC<SupplyChainViewProps> = ({
         onClose={() => setIsAddMedicineOpen(false)}
         onAddMedicine={handleAddMedicine}
       />
-
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed bottom-12 right-6 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-lg shadow-xl text-xs font-medium flex items-center gap-2 border border-slate-700 animate-in fade-in slide-in-from-bottom-2 duration-200">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
     </div>
   );
 };

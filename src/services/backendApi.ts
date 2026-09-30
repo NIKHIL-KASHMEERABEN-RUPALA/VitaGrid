@@ -183,6 +183,7 @@ export interface WhatIfResult {
   outcome_summary: string;
   projected_risk_reduction_pct: number;
   recommendation_verdict: string;
+  simulation_id?: string;
 }
 
 export async function runWhatIfSimulation(

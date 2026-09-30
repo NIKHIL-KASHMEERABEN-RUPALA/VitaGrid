@@ -2,7 +2,7 @@ export interface PathogenOverview {
   id: string;
   name: string;
   category: string;
-  colorDot: 'red' | 'green' | 'amber' | 'blue' | 'purple';
+  colorDot: 'red' | 'green' | 'amber' | 'blue' | 'purple' | 'cyan';
   r0: number;
   velocity7d: string;
   affectedClusters: string;
