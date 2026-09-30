@@ -1,46 +1,9 @@
-# VitaGrid GOV - Sovereign AI & ML Backend Requirements
-# Compliant with Python 3.10+ and CUDA 12.1+ / CPU fallback
+# VitaGrid GOV AI - Sovereign Intelligence Backend Dependencies
+# Optimized for Vercel Serverless & Production FastAPI Deployment
 
-# Multi-Agent Framework & Orchestration
-langgraph>=0.0.30
+fastapi>=0.110.0
+uvicorn>=0.29.0
 pydantic>=2.5.0
 pydantic-settings>=2.1.0
-
-# LLM Serving & Accelerated Inference
-vllm>=0.4.2
-torch>=2.2.0
-transformers>=4.40.0
-accelerate>=0.30.0
-
-# PEFT / LoRA Fine-Tuning & Quantization
-peft>=0.10.0
-bitsandbytes>=0.43.0
-trl>=0.8.6
-datasets>=2.18.0
-
-# RAG Knowledge Layer & Vector Search
-llamaindex>=0.10.0
-sentence-transformers>=2.7.0
-faiss-cpu>=1.8.0
-
-# Mathematical Optimization & Epidemiology
-scipy>=1.12.0
-pulp>=2.8.0
-numpy>=1.26.0
-
-# API Serving & Gateway
-fastapi>=0.110.0
-uvicorn[standard]>=0.29.0
 python-multipart>=0.0.9
-
-# MLflow Experiment Tracking & Registry
-mlflow>=2.12.0
-
-# Observability & Sovereign Telemetry
-opentelemetry-api>=1.24.0
-opentelemetry-sdk>=1.24.0
-
-# Testing & Quality Assurance
-pytest>=8.1.0
-pytest-asyncio>=0.23.0
 httpx>=0.27.0
