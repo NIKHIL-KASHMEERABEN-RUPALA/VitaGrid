@@ -51,7 +51,7 @@ export const MarketingPage: React.FC<MarketingPageProps> = ({
     <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900">
       {/* 1. Top Navigation Bar */}
       <MarketingNavbar
-        onOpenConsole={() => onOpenConsole()}
+        onOpenConsole={(mod) => onOpenConsole(mod)}
         onOpenLogin={onOpenLogin}
         onRequestAccess={handleOpenAccess}
       />
@@ -59,7 +59,7 @@ export const MarketingPage: React.FC<MarketingPageProps> = ({
       {/* 2. Hero Section */}
       <MarketingHero
         onRequestAccess={handleOpenAccess}
-        onOpenConsole={() => onOpenConsole()}
+        onOpenConsole={(mod) => onOpenConsole(mod)}
         onAuthorizeProposal={onAuthorizeProposal}
       />
 

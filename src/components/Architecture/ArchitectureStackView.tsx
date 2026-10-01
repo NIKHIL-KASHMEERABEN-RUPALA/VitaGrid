@@ -23,6 +23,7 @@ import {
   Compass,
   FileText,
   AlertTriangle,
+  Download,
   Code2,
   Play,
   Check,
@@ -402,6 +403,16 @@ export const ArchitectureStackView: React.FC = () => {
             <RefreshCw className={`w-3.5 h-3.5 text-slate-500 ${isRefreshing ? 'animate-spin' : ''}`} />
             <span>Sync Swarm Status</span>
           </button>
+
+          <a
+            href="/VitaGrid_GOV_Sovereign_AI_Swarm_End_to_End.ipynb"
+            download="VitaGrid_GOV_Sovereign_AI_Swarm_End_to_End.ipynb"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold transition-colors shadow-2xs cursor-pointer"
+            title="Download End-to-End Sovereign AI/ML Jupyter Notebook"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>Download .ipynb</span>
+          </a>
         </div>
       </div>
 

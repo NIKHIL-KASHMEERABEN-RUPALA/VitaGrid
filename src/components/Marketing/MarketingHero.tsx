@@ -10,12 +10,13 @@ import {
   Layers,
   Sparkles,
   ExternalLink,
+  Cpu,
 } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
 
 interface MarketingHeroProps {
   onRequestAccess: () => void;
-  onOpenConsole: () => void;
+  onOpenConsole: (targetModule?: string) => void;
   onAuthorizeProposal?: () => void;
 }
 
@@ -82,11 +83,19 @@ export const MarketingHero: React.FC<MarketingHeroProps> = ({
           </button>
 
           <button
-            onClick={onOpenConsole}
+            onClick={() => onOpenConsole()}
             className="w-full sm:w-auto bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-semibold text-xs sm:text-sm px-6 py-3 rounded-lg shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer hover:border-slate-400"
           >
             <span>Explore the Platform</span>
             <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+          </button>
+
+          <button
+            onClick={() => onOpenConsole('ml-models')}
+            className="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm px-6 py-3 rounded-lg shadow-sm border border-slate-700 transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <Cpu className="w-4 h-4 text-purple-400" />
+            <span>AI Swarm &amp; Notebook Lab</span>
           </button>
         </motion.div>
 
@@ -222,8 +231,8 @@ export const MarketingHero: React.FC<MarketingHeroProps> = ({
                 </div>
 
                 <button
-                  onClick={onOpenConsole}
-                  className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1"
+                  onClick={() => onOpenConsole()}
+                  className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1 cursor-pointer"
                 >
                   <span>Full Map</span>
                   <ArrowRight className="w-3 h-3" />
@@ -326,7 +335,10 @@ export const MarketingHero: React.FC<MarketingHeroProps> = ({
                 </div>
 
                 <button
-                  onClick={onAuthorizeProposal || onOpenConsole}
+                  onClick={() => {
+                    if (onAuthorizeProposal) onAuthorizeProposal();
+                    else onOpenConsole();
+                  }}
                   className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-3 py-1.5 rounded shadow-2xs transition-colors shrink-0 cursor-pointer"
                 >
                   Authorize Sovereign Rebalance

@@ -15,7 +15,7 @@
 
 **An institutional-grade AI platform engineered for national ministries of health, emergency logistics commands, and sovereign pharmaceutical governance.**
 
-[📊 Live Dashboard](#quick-start) • [🏗️ Architecture](#solution-architecture) • [🤖 AI Agents](#multi-agent-swarm-architecture) • [🔐 Security](#security-sovereignty--zero-pii-design) • [📖 Documentation](#getting-started) • [🤝 Contributing](#contributing)
+[📊 Live Dashboard](#quick-start) • [🏗️ Architecture](#solution-architecture) • [🔬 AI Notebook & Lab](#-sovereign-ai-notebook--interactive-ml-laboratory) • [🤖 AI Agents](#multi-agent-swarm-architecture) • [🔐 Security](#security-sovereignty--zero-pii-design) • [📖 Documentation](#getting-started) • [🤝 Contributing](#contributing)
 
 </div>
 
@@ -216,6 +216,22 @@ GOVERNANCE LAYER (Overlays All Echelons):
 - DEFCON alert tier system (DEFCON 5 → DEFCON 1)
 - Executive briefing cards (24h surge forecast, top 10 at-risk facilities, top 10 depleted commodities)
 - Full audit trail (who authorized what, when, why)
+
+### 🔬 **Sovereign AI Notebook & Interactive ML Laboratory** (`/ml-models` • `AI Notebook & Lab`)
+**Sequential Technical Notebook Execution & Live Model Laboratory**
+- **Navbar Position**: Ranked **directly after Architecture & AI Stack** in the top navigation matrix for immediate access by clinical directors and AI researchers.
+- **Embedded Jupyter Notebook Runner**: Full live frontend integration of `VitaGrid_GOV_Sovereign_AI_Swarm_End_to_End.ipynb` allowing sequential execution of all 9 boxes in the browser with real-time streaming telemetry and zero latency.
+- **Direct Download**: One-click download button for `VitaGrid_GOV_Sovereign_AI_Swarm_End_to_End.ipynb` for offline execution in local JupyterLab, VS Code, or Google Colab.
+- **Interactive Sequential Boxes (Boxes 1 to 9)**:
+  - **Box 1: Sovereign Zero-PII Sanitization & Heuristic Enclave**: NIST SP 800-53 Rev. 5 & HIPAA Safe Harbor compliant redaction of patient identities, phone numbers, emails, and MRNs with FIPS cryptographic enclave sealing.
+  - **Box 2: Sovereign Grounded RAG & Strict Refusal Gate**: Hybrid TF-IDF BM25 + Dense vector cosine retrieval ($\text{Score} = \alpha \cdot \text{Dense} + (1-\alpha) \cdot \text{BM25}$) grounded in accredited WHO & National Ministry protocols with a strict refusal gate for out-of-domain queries ($< 0.28$).
+  - **Box 3: Sovereign LLM Domain Adaptation (LoRA / QLoRA)**: NF4 4-bit NormalFloat quantization, rank $r=16/32$, $\alpha=32/64$, with a hot-swappable adapter registry (`NIKHILPATEL00212/vitaGridProtocol`, `lora-epidemic-surveillance-v2`, `lora-ministerial-governance-v4`) and token budget manager.
+  - **Box 4: Bayesian Cori $R_t$, Stockout Velocity & Cold-Chain Physics**: Instantaneous reproduction number $R_t$ estimation using Poisson-Gamma conjugate updates, doubling time calculations, exponential depletion burn velocity, and Newton's law cooling ODE ($T(t) = T_{\text{amb}} + (T_0 - T_{\text{amb}}) e^{-kt}$) with potency degradation modeling.
+  - **Box 5: TreeSHAP Feature Attributions & Ministerial Root-Cause Cards**: Shapley additive explanations ($f(x) = \phi_0 + \sum \phi_i$) across 28 facility indicators, outputting directional impacts and statutory ministerial action directives.
+  - **Box 6: Multi-Agent Swarm Directed Acyclic Graph (DAG)**: 5-agent stateful graph orchestration across sequential waves (Wave 1: Parallel Sentinels $\rightarrow$ Wave 2: Simplex LP Optimizer & Resource Intelligence $\rightarrow$ Wave 3: Consensus Verifier with SHA-256 state hashing).
+  - **Box 7: Cryptographic Human-in-the-Loop (HITL) Gate**: Dual ministerial authorization terminal generating FIPS 140-3 HMAC-SHA256 signatures and 72-hour revocable rollback tokens.
+  - **Box 8: Counterfactual "What-If" Scenario Simulator**: Interactive risk modeling for unexpected road transit corridor delays and acute pediatric admission surges, calculating net operational runway loss.
+  - **Box 9: Immutable Sovereign Cryptographic Audit Ledger**: Chained SHA-256 block explorer recording every automated heuristic calculation, model prediction, and ministerial override with zero-tamper verification.
 
 ### 📦 **Supply Chain Intelligence** (`/supply-chain`)
 **Multi-Echelon Pharmaceutical Logistics Optimization**
@@ -944,6 +960,12 @@ VitaGrid/
    - Completed decision ledger (with cryptographic signatures visible)
    - Rollback token issuance panel (emergency override for field conditions)
    - Full audit log (searchable by date, actor, decision type)
+
+6. **Sovereign AI Notebook & Interactive ML Laboratory (`/ml-models` • `AI Notebook & Lab`)**
+   - Positioned in the top navbar **directly after Architecture & AI Stack** for seamless navigation.
+   - Live interactive execution of `VitaGrid_GOV_Sovereign_AI_Swarm_End_to_End.ipynb` across Boxes 1–9 directly in the browser with real-time streaming telemetry and zero latency.
+   - Interactive Zero-PII redaction, Grounded RAG with refusal gates, LoRA/QLoRA adapter hot-swapper, Bayesian Cori $R_t$ numerical engine, TreeSHAP explainability cards, Multi-Agent Swarm DAG dispatcher, FIPS 140-3 HITL signer, Counterfactual What-If risk simulator, and SHA-256 block ledger.
+   - Direct one-click download of the complete `.ipynb` file for local execution via JupyterLab or Google Colab.
 
 ---
 

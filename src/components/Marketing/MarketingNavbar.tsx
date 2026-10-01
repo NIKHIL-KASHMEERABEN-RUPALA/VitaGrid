@@ -1,8 +1,8 @@
 import React from 'react';
-import { Plus, ArrowRight, ShieldCheck, ChevronRight, Activity, Terminal } from 'lucide-react';
+import { Plus, ArrowRight, ShieldCheck, ChevronRight, Activity, Terminal, Cpu } from 'lucide-react';
 
 interface MarketingNavbarProps {
-  onOpenConsole: () => void;
+  onOpenConsole: (targetModule?: string) => void;
   onOpenLogin?: () => void;
   onRequestAccess: () => void;
   onNavigateSection?: (sectionId: string) => void;
@@ -42,7 +42,7 @@ export const MarketingNavbar: React.FC<MarketingNavbarProps> = ({
 
         <div className="flex items-center gap-3 shrink-0">
           <button
-            onClick={onOpenConsole}
+            onClick={() => onOpenConsole()}
             className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors font-medium cursor-pointer group"
           >
             <span>Live Command Center</span>
@@ -104,6 +104,14 @@ export const MarketingNavbar: React.FC<MarketingNavbarProps> = ({
           >
             Resources
           </button>
+          <button
+            onClick={() => onOpenConsole('ml-models')}
+            className="flex items-center gap-1.5 text-purple-600 dark:text-purple-400 font-bold transition-colors cursor-pointer bg-purple-50 dark:bg-purple-950/40 hover:bg-purple-100 dark:hover:bg-purple-900/50 px-2.5 py-1 rounded border border-purple-200 dark:border-purple-800"
+            title="Open Interactive AI/ML Laboratory & Sovereign Jupyter Notebook"
+          >
+            <Cpu className="w-3.5 h-3.5" />
+            <span>AI Lab &amp; Notebook</span>
+          </button>
         </nav>
 
         {/* Right Action Buttons */}
@@ -116,7 +124,10 @@ export const MarketingNavbar: React.FC<MarketingNavbarProps> = ({
           </button>
 
           <button
-            onClick={onOpenLogin || onOpenConsole}
+            onClick={() => {
+              if (onOpenLogin) onOpenLogin();
+              else onOpenConsole();
+            }}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-xs font-semibold shadow-xs shadow-blue-600/20 transition-all cursor-pointer flex items-center gap-1.5"
             title="Sign in to VitaGrid GOV National Health Gateway"
           >

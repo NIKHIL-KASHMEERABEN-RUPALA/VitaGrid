@@ -27,6 +27,7 @@ import { ResourceIntelligenceView } from './components/ResourceIntelligence/Reso
 import { AiDecisionCopilot } from './components/Copilot/AiDecisionCopilot';
 import { ArchitectureStackView } from './components/Architecture/ArchitectureStackView';
 import { PreemptiveStagingView } from './components/PreemptiveStaging/PreemptiveStagingView';
+import { SovereignNotebookView } from './components/AiLab/SovereignNotebookView';
 import { WhatIfSimulatorModal } from './components/CommandCenter/WhatIfSimulatorModal';
 import { TreeShapRootCauseCard } from './components/CommandCenter/TreeShapRootCauseCard';
 import {
@@ -514,7 +515,9 @@ export default function App() {
             <ArchitectureStackView />
           ) : activeModule === 'preemptive-staging' ? (
             <PreemptiveStagingView />
-          ) : ['knowledge-system', 'ml-models', 'cross-district'].includes(activeModule) ? (
+          ) : activeModule === 'ml-models' ? (
+            <SovereignNotebookView />
+          ) : ['knowledge-system', 'cross-district'].includes(activeModule) ? (
             <ModuleFallbackView
               moduleId={activeModule}
               onActionClick={showToast}

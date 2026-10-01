@@ -49,6 +49,7 @@ export interface HeaderProps {
 export const SECONDARY_NAV_ITEMS = [
   { id: 'command-center', label: 'National Command Center', shortLabel: 'National Command', icon: LayoutDashboard },
   { id: 'architecture-stack', label: 'Multi-Agent Architecture & AI Stack', shortLabel: 'Architecture & AI Stack', icon: Network },
+  { id: 'ml-models', label: 'Sovereign AI Notebook & ML Lab', shortLabel: 'AI Notebook & Lab', icon: Cpu, badge: 'Live' },
   { id: 'supply-chain', label: 'Supply Chain Intelligence', shortLabel: 'Supply Chain', icon: Truck },
   { id: 'outbreak-radar', label: 'Demand & Outbreak Radar', shortLabel: 'Outbreak Radar', icon: Activity },
   { id: 'resource-intel', label: 'Resource Intelligence', shortLabel: 'Resource Intel', icon: Layers },
@@ -57,7 +58,6 @@ export const SECONDARY_NAV_ITEMS = [
   { id: 'human-approvals', label: 'Human Approvals', shortLabel: 'Human Approvals', icon: ClipboardCheck, badge: 2 },
   { id: 'preemptive-staging', label: 'Pre-emptive Staging', shortLabel: 'Pre-emptive Staging', icon: PackageCheck },
   { id: 'knowledge-system', label: 'Knowledge System', shortLabel: 'Knowledge & SOPs', icon: BookOpen },
-  { id: 'ml-models', label: 'ML Models & Hub', shortLabel: 'ML Models & Hub', icon: Cpu },
   { id: 'cross-district', label: 'Cross-District Planner', shortLabel: 'Cross-District', icon: Compass },
   { id: 'briefings', label: 'Executive Briefings', shortLabel: 'Briefings (PDF)', icon: FileText },
 ];
@@ -313,6 +313,7 @@ export const Header: React.FC<HeaderProps> = ({
             const Icon = item.icon;
             const isActive = activeModule === item.id;
             const badgeCount = item.id === 'human-approvals' ? pendingApprovalsCount : item.badge;
+            const hasBadge = badgeCount !== undefined && (typeof badgeCount === 'number' ? badgeCount > 0 : Boolean(badgeCount));
 
             return (
               <button
@@ -331,11 +332,13 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                 <span>{item.shortLabel}</span>
-                {badgeCount !== undefined && badgeCount > 0 && (
+                {hasBadge && (
                   <span
                     className={`text-[10px] font-extrabold px-1.5 py-0.2 rounded-full shrink-0 ml-0.5 ${
                       isActive
                         ? 'bg-white text-blue-700'
+                        : item.id === 'ml-models'
+                        ? 'bg-purple-600 text-white'
                         : 'bg-red-600 text-white'
                     }`}
                   >
