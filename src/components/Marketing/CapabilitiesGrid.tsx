@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import {
   Radio,
   Activity,
@@ -8,6 +9,7 @@ import {
   Network,
   CheckCircle2,
 } from 'lucide-react';
+import { ScrollReveal } from './ScrollReveal';
 
 export const CapabilitiesGrid: React.FC = () => {
   const capabilities = [
@@ -62,11 +64,12 @@ export const CapabilitiesGrid: React.FC = () => {
   ];
 
   return (
-    <section id="capabilities-section" className="py-20 bg-white border-b border-slate-200/90">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="capabilities-section" className="py-20 bg-white border-b border-slate-200/90 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-mono font-bold uppercase tracking-wider mb-3">
+        <ScrollReveal direction="up" className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-mono font-bold uppercase tracking-wider mb-3 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-600 pulse-dot-blue" />
             <span>ENTERPRISE PLATFORM ATTRIBUTES</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
@@ -76,23 +79,34 @@ export const CapabilitiesGrid: React.FC = () => {
             Engineered to operate reliably in sovereign, low-bandwidth, and mission-critical environments
             connecting thousands of distributed healthcare touchpoints.
           </p>
-        </div>
+        </ScrollReveal>
 
-        {/* Grid of 6 Feature Cards (2 rows of 3) */}
+        {/* Grid of 6 Feature Cards (2 rows of 3) with Sequential Scroll Entrance */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {capabilities.map((item) => {
+          {capabilities.map((item, idx) => {
             const Icon = item.icon;
             return (
-              <div
+              <motion.div
                 key={item.id}
-                className="bg-slate-50/70 rounded-xl p-6 border border-slate-200/80 hover:bg-white hover:border-blue-300 hover:shadow-xs transition-all flex flex-col justify-between group"
+                initial={{ opacity: 0, y: 28, scale: 0.97 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{
+                  duration: 0.5,
+                  delay: idx * 0.08, // Sequential flow delay
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="bg-slate-50/70 rounded-xl p-6 border border-slate-200/80 hover:bg-white glow-card transition-all flex flex-col justify-between group relative overflow-hidden"
               >
+                {/* Subtle top indicator line on hover */}
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform shadow-2xs">
+                    <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-[10px] font-mono font-bold uppercase text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200 shadow-2xs">
+                    <span className="text-[10px] font-mono font-bold uppercase text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200 shadow-2xs group-hover:border-blue-200 transition-colors">
                       {item.badge}
                     </span>
                   </div>
@@ -106,11 +120,14 @@ export const CapabilitiesGrid: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="pt-4 mt-4 border-t border-slate-200/60 flex items-center gap-1.5 text-[11px] font-medium text-emerald-700">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Sovereign Production Grade</span>
+                <div className="pt-4 mt-4 border-t border-slate-200/60 flex items-center justify-between text-[11px] font-medium text-emerald-700">
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>Sovereign Production Grade</span>
+                  </div>
+                  <span className="font-mono text-[10px] text-slate-400">0{idx + 1}</span>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

@@ -104,3 +104,132 @@
   stroke-dasharray: 6 4;
   animation: flight-dash 1.2s linear infinite;
 }
+
+/* =========================================================================
+   Algo-Flow Inspired Animations & Visual Effects
+   ========================================================================= */
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(79, 209, 165, 0.4);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.18);
+    box-shadow: 0 0 0 5px rgba(79, 209, 165, 0);
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-dot-blue {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.18);
+    box-shadow: 0 0 0 5px rgba(59, 130, 246, 0);
+  }
+}
+
+.pulse-dot-blue {
+  animation: pulse-dot-blue 1.8s ease-in-out infinite;
+}
+
+@keyframes scan-beam {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  30% {
+    opacity: 0.7;
+  }
+  70% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(350%);
+  }
+}
+
+.scan-beam {
+  animation: scan-beam 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes shimmer-sheen {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer-sheen {
+  animation: shimmer-sheen 2.5s infinite linear;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(99, 102, 241, 0.5), 0 0 40px rgba(59, 130, 246, 0.2);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* Card Glow & Hover Elevate */
+.glow-card {
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s ease;
+}
+
+.glow-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px -10px rgba(59, 130, 246, 0.15), 0 0 0 1px rgba(59, 130, 246, 0.35);
+  border-color: rgba(59, 130, 246, 0.45) !important;
+}
+
+.glow-card-emerald:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px -10px rgba(16, 185, 129, 0.15), 0 0 0 1px rgba(16, 185, 129, 0.35);
+  border-color: rgba(16, 185, 129, 0.45) !important;
+}
+
+.glow-card-dark {
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s ease;
+}
+
+.glow-card-dark:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6), 0 0 20px rgba(99, 102, 241, 0.3);
+  border-color: rgba(129, 140, 248, 0.4) !important;
+}
+
+/* Micro terminal dots */
+.terminal-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+/* Cyber grid background helper */
+.cyber-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+

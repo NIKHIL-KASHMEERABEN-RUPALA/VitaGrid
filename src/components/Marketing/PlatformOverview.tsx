@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import {
   Monitor,
   Activity,
@@ -13,6 +14,7 @@ import {
   Server,
   Sparkles,
 } from 'lucide-react';
+import { ScrollReveal } from './ScrollReveal';
 
 interface PlatformOverviewProps {
   onOpenConsole: () => void;
@@ -26,12 +28,12 @@ export const PlatformOverview: React.FC<PlatformOverviewProps> = ({
   const [activeTab, setActiveTab] = useState<'command' | 'radar' | 'mesh'>('command');
 
   return (
-    <section id="platform-section" className="py-20 bg-white border-b border-slate-200/90">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="platform-section" className="py-20 bg-white border-b border-slate-200/90 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section Header */}
-        <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-mono font-bold uppercase tracking-wider mb-3">
-            <Radio className="w-3.5 h-3.5 text-blue-600 animate-pulse-subtle" />
+        <ScrollReveal direction="up" className="max-w-3xl mb-12">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-mono font-bold uppercase tracking-wider mb-3 shadow-2xs">
+            <Radio className="w-3.5 h-3.5 text-blue-600 pulse-dot-blue" />
             <span>PLATFORM OVERVIEW &amp; NATIONAL ARCHITECTURE</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
@@ -42,18 +44,24 @@ export const PlatformOverview: React.FC<PlatformOverviewProps> = ({
             supply chains, and predictive epidemiological radar into a single unified national command canvas.
             Built exclusively for sovereign health ministries and enterprise public health authorities.
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* Big Visual Layout: Text Highlights on Left / Large Command Center Visual on Right */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Column: Key Platform Capabilities Highlights */}
           <div className="lg:col-span-4 space-y-4">
-            <div className="bg-slate-50/80 rounded-xl p-5 border border-slate-200/90 shadow-2xs">
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+              className="bg-slate-50/80 rounded-xl p-5 border border-slate-200/90 shadow-2xs glow-card group"
+            >
               <div className="flex items-center gap-2.5 mb-2">
-                <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+                <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-2xs group-hover:scale-105 transition-transform">
                   01
                 </div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
                   Continuous Telemetry Fabric
                 </h3>
               </div>
@@ -61,14 +69,20 @@ export const PlatformOverview: React.FC<PlatformOverviewProps> = ({
                 Connects 2,840 remote primary health centers, rural dispensaries, and regional hospitals.
                 Ingests stock levels, cold-chain temperature logs, and patient admissions without latency.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-slate-50/80 rounded-xl p-5 border border-slate-200/90 shadow-2xs">
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              className="bg-slate-50/80 rounded-xl p-5 border border-slate-200/90 shadow-2xs glow-card group"
+            >
               <div className="flex items-center gap-2.5 mb-2">
-                <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">
+                <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-2xs group-hover:scale-105 transition-transform">
                   02
                 </div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">
                   Autonomous Multi-Agent Mesh
                 </h3>
               </div>
@@ -76,14 +90,20 @@ export const PlatformOverview: React.FC<PlatformOverviewProps> = ({
                 Specialized AI agents monitor consumption burn rates, calculate epidemic acceleration
                 curves, and negotiate peer-to-peer resource transfers across district boundaries.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="bg-slate-50/80 rounded-xl p-5 border border-slate-200/90 shadow-2xs">
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="bg-slate-50/80 rounded-xl p-5 border border-slate-200/90 shadow-2xs glow-card group"
+            >
               <div className="flex items-center gap-2.5 mb-2">
-                <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-xs">
+                <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-2xs group-hover:scale-105 transition-transform">
                   03
                 </div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
                   Constitutional Sovereign Gates
                 </h3>
               </div>
@@ -91,26 +111,38 @@ export const PlatformOverview: React.FC<PlatformOverviewProps> = ({
                 No autonomous dispatch occurs without explicit ministerial human authorization. Zero
                 personally identifiable patient data ever leaves domestic sovereign data borders.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="pt-2">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.5, delay: 0.35 }}
+              className="pt-2"
+            >
               <button
                 onClick={onOpenConsole}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs py-3 px-4 rounded-lg shadow-xs shadow-blue-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs py-3 px-4 rounded-lg shadow-md shadow-blue-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer hover:scale-101 active:scale-99"
               >
                 <span>Launch National Command Console</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-            </div>
+            </motion.div>
           </div>
 
           {/* Right Column: Large Generated Modern National Health Command Center Visual Display */}
-          <div className="lg:col-span-8">
-            <div className="rounded-xl border border-slate-300/80 bg-slate-900 shadow-2xl overflow-hidden text-white">
+          <motion.div
+            initial={{ opacity: 0, y: 28, scale: 0.98 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.65, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:col-span-8"
+          >
+            <div className="rounded-xl border border-slate-700/80 bg-slate-900 shadow-2xl overflow-hidden text-white glow-card-dark relative">
               {/* Command Center Bezel Header */}
               <div className="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse-subtle"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 pulse-dot"></div>
                   <span className="font-mono text-slate-200 font-bold tracking-wider text-[11px]">
                     NATIONAL COMMAND CENTER • SOVEREIGN TELEMETRY FEED
                   </span>
@@ -421,7 +453,7 @@ export const PlatformOverview: React.FC<PlatformOverviewProps> = ({
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

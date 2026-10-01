@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import {
   Radio,
   Activity,
@@ -11,7 +12,9 @@ import {
   Sparkles,
   Lock,
   LucideIcon,
+  CheckCircle2,
 } from 'lucide-react';
+import { ScrollReveal, FlowConnectingRail } from './ScrollReveal';
 
 interface StepItem {
   stepNumber: string;
@@ -74,12 +77,16 @@ export const WorkflowSection: React.FC = () => {
   ];
 
   return (
-    <section id="workflow-section" className="py-20 bg-[#F8F9FB] border-b border-slate-200/90">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="workflow-section" className="py-20 bg-[#F8F9FB] border-b border-slate-200/90 relative overflow-hidden">
+      {/* Background Subtle Cyber Grid */}
+      <div className="absolute inset-0 cyber-grid-pattern opacity-40 pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-mono font-bold uppercase tracking-wider mb-3">
-            <span>OPERATIONAL PIPELINE</span>
+        <ScrollReveal direction="up" className="text-center max-w-3xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-mono font-bold uppercase tracking-wider mb-3 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-600 pulse-dot-blue" />
+            <span>OPERATIONAL PIPELINE • SEQUENTIAL CONSENSUS</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             How It Works: End-to-End Decision Flow
@@ -88,42 +95,57 @@ export const WorkflowSection: React.FC = () => {
             From remote dispensary bio-signal anomalies to physical cold-chain resupply,
             VitaGrid operates with sovereign accountability at every milestone.
           </p>
-        </div>
 
-        {/* Step-by-Step Flow Cards (5 Steps) */}
+          {/* Interactive Flow Connecting Rail */}
+          <FlowConnectingRail activeIndex={selectedStep} total={steps.length} />
+        </ScrollReveal>
+
+        {/* Step-by-Step Flow Cards (5 Steps) with Sequential Staggered Entrance */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-14">
           {steps.map((item, idx) => {
             const Icon = item.icon;
             const isSelected = selectedStep === idx + 1;
             return (
-              <div
+              <motion.div
                 key={item.stepNumber}
+                initial={{ opacity: 0, y: 30, scale: 0.96 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{
+                  duration: 0.55,
+                  delay: idx * 0.1, // Staggered sequential appearance like algo-flow!
+                  ease: [0.22, 1, 0.36, 1],
+                }}
                 onClick={() => setSelectedStep(idx + 1)}
-                className={`rounded-xl p-5 border transition-all cursor-pointer flex flex-col justify-between ${
+                className={`rounded-xl p-5 border cursor-pointer flex flex-col justify-between glow-card relative overflow-hidden group ${
                   isSelected
-                    ? 'bg-white border-blue-500 shadow-md ring-2 ring-blue-500/20'
-                    : 'bg-white/80 border-slate-200/90 hover:bg-white hover:border-slate-300 shadow-2xs'
+                    ? 'bg-white border-blue-500 shadow-lg ring-2 ring-blue-500/20'
+                    : 'bg-white/85 border-slate-200/90 hover:bg-white hover:border-blue-300 shadow-2xs'
                 }`}
               >
+                {/* Active step top accent bar */}
+                {isSelected && (
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-indigo-500 to-emerald-400" />
+                )}
+
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span
-                      className={`text-xs font-mono font-extrabold px-2 py-0.5 rounded ${
+                      className={`text-xs font-mono font-extrabold px-2 py-0.5 rounded flex items-center gap-1.5 transition-colors ${
                         isSelected
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-slate-100 text-slate-700'
+                          ? 'bg-blue-600 text-white shadow-2xs'
+                          : 'bg-slate-100 text-slate-700 group-hover:bg-blue-50 group-hover:text-blue-700'
                       }`}
                     >
                       {item.stepNumber}
+                      {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />}
                     </span>
-                    <Icon
-                      className={`w-4 h-4 ${
-                        isSelected ? 'text-blue-600' : 'text-slate-400'
-                      }`}
-                    />
+                    <div className={`p-1.5 rounded-md transition-colors ${isSelected ? 'bg-blue-50 text-blue-600' : 'text-slate-400 group-hover:text-blue-500'}`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
                   </div>
 
-                  <h3 className="text-sm font-bold text-slate-900 mb-1 leading-snug">
+                  <h3 className="text-sm font-bold text-slate-900 mb-1 leading-snug group-hover:text-blue-600 transition-colors">
                     {item.title}
                   </h3>
 
@@ -137,20 +159,28 @@ export const WorkflowSection: React.FC = () => {
                 </div>
 
                 <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-mono">
-                  <span className="text-slate-400">{item.badge}</span>
-                  <span className={isSelected ? 'text-blue-600 font-bold' : 'text-slate-400'}>
+                  <span className="text-slate-400 font-medium">{item.badge}</span>
+                  <span className={`transition-colors ${isSelected ? 'text-blue-600 font-bold' : 'text-slate-400 group-hover:text-slate-600'}`}>
                     Phase {idx + 1}
                   </span>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* Supporting System Architecture & Decision Flow Diagram */}
-        <div id="architecture-section" className="rounded-xl border border-slate-300/80 bg-slate-900 text-white p-6 shadow-xl scroll-mt-24">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800 text-xs">
+        <ScrollReveal direction="up" delay={0.2} id="architecture-section" className="rounded-xl border border-slate-700/80 bg-slate-900 text-white p-6 shadow-xl scroll-mt-24 relative overflow-hidden glow-card-dark">
+          {/* Subtle radar scan beam sweep across pipeline */}
+          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-blue-500/10 via-emerald-400/5 to-transparent scan-beam pointer-events-none" />
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800 text-xs relative">
             <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 mr-1">
+                <span className="terminal-dot bg-red-500/80" />
+                <span className="terminal-dot bg-amber-500/80" />
+                <span className="terminal-dot bg-emerald-500/80" />
+              </div>
               <Layers className="w-4 h-4 text-blue-400" />
               <span className="font-mono font-bold text-slate-200 uppercase tracking-wider text-[11px]">
                 SYSTEM ARCHITECTURE &amp; GOVERNANCE PIPELINE
@@ -158,10 +188,11 @@ export const WorkflowSection: React.FC = () => {
             </div>
             <div className="flex items-center gap-3 text-[11px] font-mono text-slate-400">
               <span className="flex items-center gap-1.5 text-emerald-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span className="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
                 ACTIVE PIPELINE • ZERO LATENCY
               </span>
-              <span>SLO: &lt; 90 SEC</span>
+              <span className="text-slate-500">|</span>
+              <span className="text-blue-300">SLO: &lt; 90 SEC</span>
             </div>
           </div>
 
@@ -247,7 +278,7 @@ export const WorkflowSection: React.FC = () => {
               ISO/IEC 27001 • ENCLAVE SECURED • AUDIT TRAIL v4.12
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

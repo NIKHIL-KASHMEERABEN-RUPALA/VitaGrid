@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import {
   ShieldCheck,
   Lock,
@@ -9,6 +10,7 @@ import {
   HardDrive,
   BadgeAlert,
 } from 'lucide-react';
+import { ScrollReveal } from './ScrollReveal';
 
 export const SovereignCompliance: React.FC = () => {
   const complianceItems = [
@@ -57,11 +59,12 @@ export const SovereignCompliance: React.FC = () => {
   ];
 
   return (
-    <section id="compliance-section" className="py-20 bg-[#F8F9FB] border-b border-slate-200/90">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="compliance-section" className="py-20 bg-[#F8F9FB] border-b border-slate-200/90 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-mono font-bold uppercase tracking-wider mb-3">
+        <ScrollReveal direction="up" className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-blue-50 border border-blue-200 text-blue-700 text-[11px] font-mono font-bold uppercase tracking-wider mb-3 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-600 pulse-dot-blue" />
             <span>SOVEREIGN DATA INTEGRITY &amp; TRUST</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
@@ -71,26 +74,37 @@ export const SovereignCompliance: React.FC = () => {
             Built from inception to respect national data borders, constitutional privacy laws,
             and ministerial command authority without reliance on proprietary foreign clouds.
           </p>
-        </div>
+        </ScrollReveal>
 
-        {/* 6 Grid Cards */}
+        {/* 6 Grid Cards with Sequential Scroll Entrance */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {complianceItems.map((card, idx) => {
             const Icon = card.icon;
             return (
-              <div
+              <motion.div
                 key={idx}
-                className="bg-white rounded-xl p-6 border border-slate-200/90 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between"
+                initial={{ opacity: 0, y: 26, scale: 0.97 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{
+                  duration: 0.5,
+                  delay: idx * 0.08,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="bg-white rounded-xl p-6 border border-slate-200/90 shadow-2xs glow-card transition-all flex flex-col justify-between group relative overflow-hidden"
               >
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-mono font-bold uppercase text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                    <span className="text-[10px] font-mono font-bold uppercase text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                       {card.badge}
                     </span>
-                    <Icon className="w-5 h-5 text-blue-600" />
+                    <div className="p-1.5 rounded-md bg-blue-50/70 border border-blue-100 text-blue-600 group-hover:scale-105 transition-transform shadow-2xs">
+                      <Icon className="w-4 h-4" />
+                    </div>
                   </div>
 
-                  <h3 className="text-sm font-bold text-slate-900 mb-2">
+                  <h3 className="text-sm font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
                     {card.title}
                   </h3>
 
@@ -99,17 +113,24 @@ export const SovereignCompliance: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center gap-1.5 text-[11px] text-emerald-700 font-medium">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Sovereign Constitutional Standard</span>
+                <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-medium text-slate-500">
+                  <div className="flex items-center gap-1.5 text-emerald-700">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>Sovereign Constitutional Standard</span>
+                  </div>
+                  <span className="font-mono text-[10px] text-slate-400">0{idx + 1}</span>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* Trust & Certifications Strip */}
-        <div className="bg-white rounded-xl p-5 border border-slate-200/90 shadow-2xs flex flex-wrap items-center justify-between gap-4 text-xs">
+        <ScrollReveal
+          direction="up"
+          delay={0.2}
+          className="bg-white rounded-xl p-5 border border-slate-200/90 shadow-2xs flex flex-wrap items-center justify-between gap-4 text-xs glow-card"
+        >
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
               <ShieldCheck className="w-5 h-5" />
@@ -134,7 +155,7 @@ export const SovereignCompliance: React.FC = () => {
               ZERO PII EGRESS CERTIFIED
             </span>
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

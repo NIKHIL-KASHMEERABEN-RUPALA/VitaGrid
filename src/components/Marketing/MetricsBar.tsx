@@ -1,5 +1,7 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { Building2, Calendar, Pill, Zap } from 'lucide-react';
+import { ScrollReveal } from './ScrollReveal';
 
 export const MetricsBar: React.FC = () => {
   const metrics = [
@@ -38,25 +40,36 @@ export const MetricsBar: React.FC = () => {
   ];
 
   return (
-    <section className="py-12 bg-white border-b border-slate-200/90">
+    <section className="py-12 bg-white border-b border-slate-200/90 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {metrics.map((item, idx) => {
             const Icon = item.icon;
             return (
-              <div
+              <motion.div
                 key={idx}
-                className="bg-slate-50/60 rounded-xl p-5 border border-slate-200/90 hover:border-blue-300 hover:bg-white hover:shadow-xs transition-all flex flex-col justify-between"
+                initial={{ opacity: 0, y: 24, scale: 0.97 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: '-30px' }}
+                transition={{
+                  duration: 0.5,
+                  delay: idx * 0.08,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="bg-slate-50/60 rounded-xl p-5 border border-slate-200/90 hover:bg-white glow-card transition-all flex flex-col justify-between group relative overflow-hidden"
               >
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 group-hover:text-blue-600 transition-colors">
                       {item.badge}
                     </span>
-                    <Icon className={`w-4 h-4 ${item.color}`} />
+                    <div className="p-1 rounded-md bg-white border border-slate-200/80 shadow-2xs group-hover:border-blue-200 transition-colors">
+                      <Icon className={`w-3.5 h-3.5 ${item.color}`} />
+                    </div>
                   </div>
 
-                  <div className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                  <div className="text-3xl font-extrabold text-slate-900 tracking-tight group-hover:text-blue-600 transition-colors">
                     {item.value}
                   </div>
 
@@ -68,7 +81,7 @@ export const MetricsBar: React.FC = () => {
                 <p className="text-[11px] text-slate-500 mt-3 leading-relaxed border-t border-slate-200/60 pt-2.5">
                   {item.description}
                 </p>
-              </div>
+              </motion.div>
             );
           })}
         </div>

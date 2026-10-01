@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import {
   ArrowRight,
   ShieldCheck,
@@ -10,6 +11,7 @@ import {
   Sparkles,
   ExternalLink,
 } from 'lucide-react';
+import { ScrollReveal } from './ScrollReveal';
 
 interface MarketingHeroProps {
   onRequestAccess: () => void;
@@ -26,34 +28,51 @@ export const MarketingHero: React.FC<MarketingHeroProps> = ({
     <section className="relative pt-12 pb-20 overflow-hidden bg-gradient-to-b from-[#F8F9FB] to-white border-b border-slate-100">
       {/* Background Subtle Grid */}
       <div
-        className="absolute inset-0 opacity-[0.35] pointer-events-none"
+        className="absolute inset-0 opacity-[0.35] pointer-events-none cyber-grid-pattern"
         style={{
-          backgroundImage:
-            'radial-gradient(#94a3b8 0.75px, transparent 0.75px), radial-gradient(#94a3b8 0.75px, #F8F9FB 0.75px)',
-          backgroundSize: '28px 28px',
-          backgroundPosition: '0 0, 14px 14px',
+          backgroundPosition: '0 0, 16px 16px',
         }}
       />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Kicker Pill */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-[11px] font-bold tracking-wider font-mono uppercase mb-6 shadow-2xs">
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse-subtle"></span>
+        {/* Kicker Pill with Motion */}
+        <motion.div
+          initial={{ opacity: 0, y: -16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-[11px] font-bold tracking-wider font-mono uppercase mb-6 shadow-2xs"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-600 pulse-dot-blue"></span>
           <span>REPUBLIC HEALTH GRID • SOVEREIGN EPIDEMIOLOGICAL WATCH</span>
-        </div>
+        </motion.div>
 
         {/* Large Bold Headline */}
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-[1.12]">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight max-w-4xl mx-auto leading-[1.12]"
+        >
           National Intelligence for Resilient Health Systems
-        </h1>
+        </motion.h1>
 
         {/* Subheadline */}
-        <p className="mt-5 text-sm sm:text-base text-slate-600 max-w-3xl mx-auto leading-relaxed font-normal">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-5 text-sm sm:text-base text-slate-600 max-w-3xl mx-auto leading-relaxed font-normal"
+        >
           Real-time visibility, epidemiological forecasting, and cross-district resource redistribution for national primary healthcare networks.
-        </p>
+        </motion.p>
 
         {/* Action Buttons */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5"
+        >
           <button
             onClick={onRequestAccess}
             className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm px-6 py-3 rounded-lg shadow-md shadow-blue-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer hover:scale-102 active:scale-98"
@@ -64,15 +83,20 @@ export const MarketingHero: React.FC<MarketingHeroProps> = ({
 
           <button
             onClick={onOpenConsole}
-            className="w-full sm:w-auto bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-semibold text-xs sm:text-sm px-6 py-3 rounded-lg shadow-2xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-semibold text-xs sm:text-sm px-6 py-3 rounded-lg shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer hover:border-slate-400"
           >
             <span>Explore the Platform</span>
             <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
           </button>
-        </div>
+        </motion.div>
 
         {/* Trust Badges Bar */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 font-medium">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 font-medium"
+        >
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
             <span>Trusted by National Health Ministries</span>
@@ -89,19 +113,24 @@ export const MarketingHero: React.FC<MarketingHeroProps> = ({
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
             <span>ISO-27001 Certified Infrastructure</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* ============================================================== */}
         {/* INTERACTIVE HERO PLATFORM PREVIEW WINDOW (Matches Reference)   */}
         {/* ============================================================== */}
-        <div className="mt-12 max-w-5xl mx-auto rounded-xl border border-slate-200/90 bg-white shadow-2xl overflow-hidden text-left">
+        <motion.div
+          initial={{ opacity: 0, y: 40, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-12 max-w-5xl mx-auto rounded-xl border border-slate-200/90 bg-white shadow-2xl overflow-hidden text-left relative glow-card"
+        >
           {/* Mock Window Top Bar */}
           <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-400"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                <span className="terminal-dot bg-red-400"></span>
+                <span className="terminal-dot bg-amber-400"></span>
+                <span className="terminal-dot bg-emerald-400"></span>
               </div>
               <span className="font-mono text-[11px] text-slate-500 ml-2 font-medium">
                 VITAGRID GOV SECURE v4.12 • REPUBLIC SOVEREIGN HEALTH GRID
@@ -109,7 +138,7 @@ export const MarketingHero: React.FC<MarketingHeroProps> = ({
             </div>
 
             <div className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-700 font-semibold">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-subtle"></span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
               <span>Live Sentinel Ingestion (UTC+3)</span>
             </div>
           </div>
@@ -305,7 +334,7 @@ export const MarketingHero: React.FC<MarketingHeroProps> = ({
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

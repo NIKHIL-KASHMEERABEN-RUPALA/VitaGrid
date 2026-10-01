@@ -1,5 +1,7 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { ArrowRight, Calendar, ShieldCheck, ExternalLink, Sparkles } from 'lucide-react';
+import { ScrollReveal } from './ScrollReveal';
 
 interface MarketingCtaProps {
   onRequestAccess: () => void;
@@ -16,18 +18,15 @@ export const MarketingCta: React.FC<MarketingCtaProps> = ({
     <section className="py-24 bg-gradient-to-b from-white to-slate-50 border-b border-slate-200/90 relative overflow-hidden">
       {/* Subtle Grid */}
       <div
-        className="absolute inset-0 opacity-[0.25] pointer-events-none"
+        className="absolute inset-0 opacity-[0.25] pointer-events-none cyber-grid-pattern"
         style={{
-          backgroundImage:
-            'radial-gradient(#94a3b8 0.75px, transparent 0.75px), radial-gradient(#94a3b8 0.75px, #F8F9FB 0.75px)',
-          backgroundSize: '24px 24px',
           backgroundPosition: '0 0, 12px 12px',
         }}
       />
 
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <ScrollReveal direction="up" className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-[11px] font-bold tracking-wider font-mono uppercase mb-4 shadow-2xs">
-          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+          <Sparkles className="w-3.5 h-3.5 text-blue-600 pulse-dot-blue" />
           <span>SOVEREIGN DEPLOYMENT READY • v4.12</span>
         </div>
 
@@ -51,7 +50,7 @@ export const MarketingCta: React.FC<MarketingCtaProps> = ({
 
           <button
             onClick={onScheduleBriefing}
-            className="w-full sm:w-auto bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs sm:text-sm px-6 py-3.5 rounded-lg shadow-2xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-xs sm:text-sm px-6 py-3.5 rounded-lg shadow-2xs transition-colors flex items-center justify-center gap-2 cursor-pointer hover:border-slate-400"
           >
             <Calendar className="w-4 h-4 text-slate-500" />
             <span>Schedule Ministerial Briefing</span>
@@ -82,7 +81,7 @@ export const MarketingCta: React.FC<MarketingCtaProps> = ({
             <span>Interoperable with DHIS2, OpenLMIS &amp; FHIR</span>
           </div>
         </div>
-      </div>
+      </ScrollReveal>
     </section>
   );
 };
